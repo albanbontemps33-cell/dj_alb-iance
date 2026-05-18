@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alb-iance — DJ Animateur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080810;
+    --deep: #0d0d1a;
+    --card: #13131f;
+    --border: rgba(255,255,255,0.07);
+    --accent: #a855f7;
+    --accent2: #ec4899;
+    --accent-glow: rgba(168,85,247,0.35);
+    --text: #e8e8f0;
+    --muted: #7070a0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  /* ── BARS ANIMÉES EN FOND ── */
+  .bg-bars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    display: flex; align-items: flex-end; gap: 3px;
+    padding: 0 20px; opacity: 0.04;
+  }
+  .bg-bars span {
+    flex: 1; background: var(--accent);
+    border-radius: 2px 2px 0 0;
+    animation: barPulse var(--dur, 1.2s) ease-in-out infinite alternate;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes barPulse {
+    from { height: 20%; }
+    to   { height: var(--h, 80%); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    background: rgba(8,8,16,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: padding .3s;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 8px; list-style: none; align-items: center; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: .85rem;
+    letter-spacing: .5px; padding: 6px 14px; border-radius: 6px;
+    transition: color .2s, background .2s;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--border); }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--accent), var(--accent2)) !important;
+    color: #fff !important; font-weight: 500 !important;
+    padding: 8px 20px !important; border-radius: 50px !important;
+  }
+  .nav-cta:hover { opacity: .85; background: none; }
+  .burger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+  .burger span { display: block; width: 24px; height: 2px; background: var(--text); margin: 5px 0; border-radius: 2px; transition: .3s; }
+
+  /* ── PAGES ── */
+  .page { display: none; position: relative; z-index: 1; }
+  .page.active { display: block; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 120px 20px 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute; width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    pointer-events: none; animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity:.7; } 50% { transform: translate(-50%,-50%) scale(1.15); opacity:1; } }
+
+  .hero-tag {
+    display: inline-block; padding: 6px 18px;
+    border: 1px solid var(--accent); border-radius: 50px;
+    font-size: .75rem; letter-spacing: 3px; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 28px;
+    animation: fadeUp .8s ease both;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 12vw, 10rem);
+    line-height: .9; letter-spacing: 6px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 70%, var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: fadeUp .8s .15s ease both;
+  }
+  .hero-sub {
+    font-size: 1.1rem; color: var(--muted); margin-top: 20px; max-width: 540px; margin-inline: auto;
+    animation: fadeUp .8s .3s ease both;
+  }
+  .hero-btns {
+    display: flex; gap: 14px; justify-content: center; margin-top: 40px; flex-wrap: wrap;
+    animation: fadeUp .8s .45s ease both;
+  }
+  .btn {
+    padding: 14px 32px; border-radius: 50px; font-family: 'DM Sans', sans-serif;
+    font-size: .9rem; font-weight: 500; letter-spacing: .5px;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; border: none;
+    box-shadow: 0 0 30px var(--accent-glow);
+  }
+  .btn-primary:hover { box-shadow: 0 0 50px var(--accent-glow); }
+  .btn-ghost {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* equalizer animé sous le titre */
+  .eq {
+    display: flex; align-items: flex-end; gap: 4px; justify-content: center;
+    height: 36px; margin-top: 40px;
+    animation: fadeUp .8s .6s ease both;
+  }
+  .eq-bar {
+    width: 4px; background: linear-gradient(to top, var(--accent2), var(--accent));
+    border-radius: 2px; animation: eq var(--d,.8s) ease-in-out infinite alternate;
+    animation-delay: var(--dl,0s);
+  }
+  @keyframes eq { from { height: 6px; } to { height: var(--h,24px); } }
+
+  /* ── SECTION COMMUNES ── */
+  section, .page-inner { padding: 100px 40px; max-width: 1100px; margin-inline: auto; }
+  h2.section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--text) 50%, var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+  }
+  .section-label {
+    font-size: .72rem; letter-spacing: 3px; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .divider {
+    width: 50px; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    margin-bottom: 40px; border-radius: 2px;
+  }
+
+  /* ── CARDS GRILLE ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 30px; position: relative; overflow: hidden;
+    transition: border-color .3s, transform .3s, box-shadow .3s;
+  }
+  .card:hover {
+    border-color: var(--accent); transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(168,85,247,.15);
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0; transition: opacity .3s;
+  }
+  .card:hover::before { opacity: 1; }
+  .card-icon { font-size: 2.2rem; margin-bottom: 16px; display: block; }
+  .card h3 { font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; }
+  .card p { color: var(--muted); font-size: .9rem; }
+
+  /* ── OUTILS ── */
+  .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  .tool-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 28px; text-decoration: none; color: var(--text);
+    transition: border-color .3s, transform .3s;
+    display: block;
+  }
+  .tool-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .tool-icon { font-size: 2.5rem; margin-bottom: 14px; display: block; }
+  .tool-card h3 { font-weight: 600; margin-bottom: 6px; }
+  .tool-card p { color: var(--muted); font-size: .85rem; }
+
+  /* ── SIMULATEUR ── */
+  .simulator {
+    background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+    padding: 40px; max-width: 700px; margin-inline: auto;
+  }
+  .sim-row { margin-bottom: 24px; }
+  .sim-row label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 8px; letter-spacing: .5px; }
+  .sim-row select, .sim-row input[type=range] { width: 100%; }
+  select {
+    background: var(--deep); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); padding: 12px 16px; font-family: inherit; font-size: .9rem;
+    width: 100%; appearance: none; cursor: pointer;
+  }
+  select:focus { outline: none; border-color: var(--accent); }
+  input[type=range] {
+    -webkit-appearance: none; height: 4px; background: var(--border); border-radius: 2px; cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+  .range-val { display: flex; justify-content: space-between; font-size: .8rem; color: var(--muted); margin-top: 6px; }
+  .sim-toggle { display: flex; gap: 12px; flex-wrap: wrap; }
+  .sim-toggle label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: .9rem; }
+  input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+  .sim-result {
+    margin-top: 32px; text-align: center; padding: 28px;
+    background: rgba(168,85,247,.07); border: 1px solid rgba(168,85,247,.25);
+    border-radius: 14px;
+  }
+  .sim-result .price {
+    font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .sim-result p { color: var(--muted); font-size: .85rem; margin-top: 6px; }
+
+  /* ── AVIS ── */
+  .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .review-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px;
+  }
+  .stars { color: #fbbf24; font-size: 1.1rem; margin-bottom: 12px; }
+  .review-card blockquote { font-size: .9rem; color: var(--muted); font-style: italic; line-height: 1.7; margin-bottom: 16px; }
+  .review-link { font-size: .78rem; color: var(--accent); text-decoration: none; }
+  .review-link:hover { text-decoration: underline; }
+  .add-review {
+    text-align: center; margin-top: 40px; padding: 30px;
+    background: var(--card); border: 1px dashed var(--border); border-radius: 16px;
+  }
+  .add-review p { color: var(--muted); margin-bottom: 16px; }
+
+  /* ── CONTACT ── */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  @media (max-width: 680px) { .contact-grid { grid-template-columns: 1fr; } }
+  .contact-info p { color: var(--muted); margin-bottom: 24px; }
+  .contact-item { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .contact-item .ico { font-size: 1.5rem; }
+  .contact-item span { font-size: .9rem; color: var(--muted); }
+  .contact-item a { color: var(--text); text-decoration: none; }
+  .contact-item a:hover { color: var(--accent); }
+  .social-row { display: flex; gap: 14px; margin-top: 28px; }
+  .social-btn {
+    display: flex; align-items: center; gap: 8px; padding: 10px 20px;
+    border: 1px solid var(--border); border-radius: 50px; text-decoration: none;
+    color: var(--muted); font-size: .85rem; transition: all .2s;
+  }
+  .social-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* MAP */
+  .map-wrap {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; height: 280px;
+  }
+  .map-wrap iframe { width: 100%; height: 100%; border: none; filter: invert(.9) hue-rotate(180deg) saturate(.7); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border); padding: 40px;
+    text-align: center; color: var(--muted); font-size: .8rem; position: relative; z-index: 1;
+  }
+  footer .logo-foot {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    display: block; margin-bottom: 10px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s, transform .6s; }
+  .reveal.shown { opacity: 1; transform: none; }
+
+  /* ── MOBILE NAV ── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--deep); border-bottom: 1px solid var(--border); padding: 16px 0; gap: 0; }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 12px 24px; border-radius: 0; }
+    .sub { position: static; background: rgba(0,0,0,.3); box-shadow: none; border-radius: 0; margin: 0; }
+    .burger { display: block; }
+    section, .page-inner { padding: 80px 20px; }
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BARRES D'ARRIÈRE-PLAN -->
+<div class="bg-bars" id="bgBars"></div>
+
+<!-- NAVIGATION -->
+<nav>
+  <a class="nav-logo" href="#" onclick="showPage('home')">ALB-IANCE</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="showPage('home')">Accueil</a></li>
+    <li><a href="#" onclick="showPage('outils')">Outils d'animation</a></li>
+    <li><a href="#" onclick="showPage('avis')">Avis clients</a></li>
+    <li><a href="#" onclick="showPage('tarifs')">Simulation</a></li>
+    <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+    <li><a href="#" class="nav-cta" onclick="showPage('contact')">Réserver</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════ PAGE HOME ═══════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <div id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero">
+      <div class="hero-tag">DJ · Animateur · Alb-iance</div>
+      <h1>FAISONS<br>LA FÊTE</h1>
+      <p class="hero-sub">Alb-iance met l'ambiance à votre soirée avec passion, pro­fession­nalisme et un petit budget. Bordeaux &amp; alentours.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn btn-primary" onclick="showPage('tarifs')">Simuler ma soirée</a>
+        <a href="#" class="btn btn-ghost" onclick="showPage('outils')">Voir l'équipement</a>
+      </div>
+      <div class="eq">
+        <div class="eq-bar" style="--d:.6s;--dl:0s;--h:20px"></div>
+        <div class="eq-bar" style="--d:.8s;--dl:.1s;--h:30px"></div>
+        <div class="eq-bar" style="--d:.5s;--dl:.2s;--h:18px"></div>
+        <div class="eq-bar" style="--d:.9s;--dl:.05s;--h:34px"></div>
+        <div class="eq-bar" style="--d:.7s;--dl:.15s;--h:26px"></div>
+        <div class="eq-bar" style="--d:.6s;--dl:.25s;--h:14px"></div>
+        <div class="eq-bar" style="--d:.8s;--dl:.1s;--h:28px"></div>
+        <div class="eq-bar" style="--d:.5s;--dl:.3s;--h:22px"></div>
+        <div class="eq-bar" style="--d:.7s;--dl:0s;--h:36px"></div>
+        <div class="eq-bar" style="--d:.9s;--dl:.2s;--h:16px"></div>
+        <div class="eq-bar" style="--d:.6s;--dl:.05s;--h:30px"></div>
+        <div class="eq-bar" style="--d:.8s;--dl:.15s;--h:24px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Présentation -->
+  <section>
+    <p class="section-label reveal">À propos</p>
+    <h2 class="section-title reveal">Qui sommes-nous ?</h2>
+    <div class="divider reveal"></div>
+    <div class="grid-2">
+      <div class="card reveal">
+        <span class="card-icon">🎧</span>
+        <h3>Passion avant tout</h3>
+        <p>Jeunes et motivés, nous mettons toute notre énergie pour vous offrir une soirée inoubliable, avec une sélection musicale adaptée à tous les âges.</p>
+      </div>
+      <div class="card reveal">
+        <span class="card-icon">💡</span>
+        <h3>Équipement pro</h3>
+        <p>Contrôleur Pioneer DDJ-FLX4, sono Audiophony, jeux de lumière Ibiza, machine à fumée, lyres… tout pour créer l'ambiance parfaite.</p>
+      </div>
+      <div class="card reveal">
+        <span class="card-icon">💰</span>
+        <h3>Petit budget, grande ambiance</h3>
+        <p>On s'adresse à tous ceux qui veulent faire la fête sans se ruiner. Simulation de tarif disponible en ligne, paiement par virement ou espèces.</p>
+      </div>
+      <div class="card reveal">
+        <span class="card-icon">📍</span>
+        <h3>Basé à Bordeaux</h3>
+        <p>Nous intervenons à Bordeaux et ses alentours. N'hésitez pas à nous contacter pour vérifier notre disponibilité dans votre secteur.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════════════════════════════ PAGE OUTILS ═══════════════════════════════ -->
+<div class="page" id="page-outils">
+  <div class="page-inner">
+    <p class="section-label">Soirée</p>
+    <h2 class="section-title">Outils d'animation</h2>
+    <div class="divider"></div>
+    <p style="color:var(--muted); margin-bottom: 40px; max-width:560px;">Tout notre matériel est sélectionné pour garantir un son, une lumière et une ambiance de qualité professionnelle à chacune de vos soirées.</p>
+    <div class="tools-grid">
+      <a href="https://www.sonovente.com/pioneer-ddj-flx4-p87676.html" target="_blank" class="tool-card">
+        <span class="tool-icon">🎛️</span>
+        <h3>Contrôleur DJ</h3>
+        <p>Pioneer DDJ-FLX4 — Mixage précis, effets pro, compatible rekordbox &amp; Serato.</p>
+      </a>
+      <a href="https://audiophony.com/produit/mojo2000live/" target="_blank" class="tool-card">
+        <span class="tool-icon">🔊</span>
+        <h3>Sonorisation</h3>
+        <p>Audiophony MOJO 2000 Live — Puissance et clarté pour remplir n'importe quelle salle.</p>
+      </a>
+      <a href="https://www.woodbrass.com/kits-et-packs-lumieres-ibiza-sound-djlight65-p257593.html" target="_blank" class="tool-card">
+        <span class="tool-icon">🌈</span>
+        <h3>Jeux de lumière</h3>
+        <p>Ibiza Sound DJLight65 — Effets colorés et strobos pour une piste de danse enflammée.</p>
+      </a>
+      <a href="https://www.electrodepot.be/fr/machine-a-fumee-edenwood-fog-1200w.html" target="_blank" class="tool-card">
+        <span class="tool-icon">💨</span>
+        <h3>Machine à fumée</h3>
+        <p>Edenwood FOG 1200W — Crée une atmosphère immersive sur la piste.</p>
+      </a>
+      <a href="https://www.metro.fr/marketplace/product/b2e1ac45-67be-4dc7-ae8b-f06c51747716?kk=a4c629a-19034f34a39-385347&mfeed_oid=3dc1ffbf-ce36-427c-b7f1-4fb6789b7c73&mfeed_bm=1&utm_source=kelkoo&utm_medium=paid&utm_campaign=kelkoo_pcs&itm_pm=cookie_consent_accept_button" target="_blank" class="tool-card">
+        <span class="tool-icon">🔦</span>
+        <h3>Lyres motorisées</h3>
+        <p>Faisceaux lumineux mobiles pour des effets scéniques dynamiques et spectaculaires.</p>
+      </a>
+      <div class="tool-card" style="background: linear-gradient(135deg, rgba(168,85,247,.12), rgba(236,72,153,.08)); border-color: rgba(168,85,247,.3); cursor:default;">
+        <span class="tool-icon">🎤</span>
+        <h3>Animation micro</h3>
+        <p>Jeux, animations, micros pour mettre le feu à votre soirée et faire participer tout le monde.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE AVIS ═══════════════════════════════ -->
+<div class="page" id="page-avis">
+  <div class="page-inner">
+    <p class="section-label">Entreprise</p>
+    <h2 class="section-title">Avis clients</h2>
+    <div class="divider"></div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Je recommande à 100 % ! Alban est super professionnel, très disponible et à l'écoute. C'est un vrai passionné de musique. Il nous a fait danser toute la nuit, nous a proposé des jeux et animations. Il est très bien équipé. À très vite pour la prochaine !!"</blockquote>
+        <a href="https://maps.app.goo.gl/gt64DA9HnKbckQYC6" target="_blank" class="review-link">Voir sur Google Maps →</a>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Un jeune DJ au top ! Très bon choix de musique, il a mis l'ambiance et a su s'adapter. C'était une super soirée aussi bien pour les enfants que pour les plus âgés. Je le recommande !"</blockquote>
+        <a href="https://maps.app.goo.gl/U5jnCz9VcXVhtiaK7" target="_blank" class="review-link">Voir sur Google Maps →</a>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★☆</div>
+        <blockquote>Avis 4 étoiles laissé sur Google.</blockquote>
+        <a href="https://maps.app.goo.gl/vgZAuopTbHzHtqEd9" target="_blank" class="review-link">Voir sur Google Maps →</a>
+      </div>
+    </div>
+    <div class="add-review">
+      <p>Vous avez fait appel à Alb-iance ? Partagez votre expérience !</p>
+      <a href="https://g.page/r/CWafGIay2Cu6EBM/review" target="_blank" class="btn btn-primary">Laisser un avis Google ✍️</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE TARIFS ═══════════════════════════════ -->
+<div class="page" id="page-tarifs">
+  <div class="page-inner">
+    <p class="section-label">Simulation de soirée</p>
+    <h2 class="section-title">Simulez votre soirée</h2>
+    <div class="divider"></div>
+    <p style="color:var(--muted); margin-bottom:40px; max-width:560px; margin-inline:auto; text-align:center;">Renseignez les détails de votre soirée et obtenez une estimation instantanée. Pour un devis définitif, contactez-nous !</p>
+
+    <div class="simulator" style="max-width:720px; padding:0; background:none; box-shadow:none; border:none;">
+      <style>
+        .sim-field { margin-bottom: 22px; }
+        .sim-field label { display:block; font-weight:600; font-size:.85rem; letter-spacing:.5px; color:var(--muted); margin-bottom:8px; }
+        .sim-field input, .sim-field select, .sim-field textarea {
+          width:100%; padding:13px 16px; background:var(--card);
+          border:1px solid var(--border); border-radius:10px;
+          color:var(--text); font-family:'DM Sans',sans-serif; font-size:.95rem;
+          appearance:none; transition:border-color .2s;
+        }
+        .sim-field input:focus, .sim-field select:focus { outline:none; border-color:var(--accent); }
+        .sim-field input[type="time"], .sim-field input[type="date"] { color-scheme:dark; }
+        #sim-btn {
+          width:100%; padding:15px; margin-top:10px;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          border:none; border-radius:50px; color:#fff;
+          font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600;
+          cursor:pointer; letter-spacing:.5px;
+          transition:opacity .2s, transform .2s; box-shadow:0 0 30px var(--accent-glow);
+        }
+        #sim-btn:hover { opacity:.85; transform:translateY(-2px); }
+        #sim-result-box {
+          margin-top:28px; padding:28px; border-radius:16px;
+          background:rgba(168,85,247,.07); border:1px solid rgba(168,85,247,.25);
+          text-align:center; display:none;
+        }
+        #sim-result-box .sim-price-big {
+          font-family:'Bebas Neue',sans-serif; font-size:3.5rem;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        #sim-result-box.error-box { border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.07); }
+        #sim-result-box.error-box .sim-price-big { background:none; -webkit-text-fill-color:#ef4444; font-size:1.1rem; }
+        #sim-result-note { color:var(--muted); font-size:.82rem; margin-top:8px; }
+        #devisSection { display:none; margin-top:28px; }
+        #devisSection p { color:var(--muted); margin-bottom:16px; font-size:.9rem; }
+        #quoteFormInner { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px; }
+        #quoteFormInner .sim-field input, #quoteFormInner .sim-field select, #quoteFormInner .sim-field textarea {
+          background:var(--deep);
+        }
+        #quote-submit {
+          width:100%; padding:14px; background:linear-gradient(135deg,var(--accent),var(--accent2));
+          border:none; border-radius:50px; color:#fff;
+          font-family:'DM Sans',sans-serif; font-size:.95rem; font-weight:600;
+          cursor:pointer; margin-top:6px; transition:opacity .2s;
+        }
+        #quote-submit:hover { opacity:.85; }
+      </style>
+
+      <div class="sim-field">
+        <label>Ville de l'événement</label>
+        <input id="sim-city" placeholder="Ex : Bordeaux, Arcachon…">
+      </div>
+      <div class="sim-field">
+        <label>Type de soirée</label>
+        <select id="sim-event">
+          <option value="privee">Soirée privée</option>
+          <option value="anniversaire">Anniversaire</option>
+          <option value="mariage">Mariage</option>
+          <option value="entreprise">Entreprise / Mairie</option>
+        </select>
+      </div>
+      <div class="sim-field">
+        <label>Nombre d'invités</label>
+        <input type="number" id="sim-guests" value="25" min="1">
+      </div>
+      <div class="sim-field">
+        <label>Heure de début (min 19h00)</label>
+        <input type="time" id="sim-start" value="20:00" min="19:00">
+      </div>
+      <div class="sim-field">
+        <label>Heure de fin (max 04h00)</label>
+        <input type="time" id="sim-end" value="00:00">
+      </div>
+
+      <button id="sim-btn" onclick="runSim()">🎧 Calculer le prix</button>
+
+      <div id="sim-result-box">
+        <div class="sim-price-big" id="sim-price-display">— €</div>
+        <p id="sim-result-note">Estimation indicative · Contactez-nous pour un devis personnalisé</p>
+      </div>
+
+      <div id="devisSection">
+        <p>Souhaitez-vous demander un devis détaillé ?</p>
+        <div id="quoteFormInner">
+          <form action="https://formspree.io/f/mgvndwla" method="POST">
+            <div class="sim-field">
+              <label>Date de l'événement</label>
+              <input type="date" name="date" required>
+            </div>
+            <div class="sim-field">
+              <label>Email</label>
+              <input type="email" name="email" required>
+            </div>
+            <div class="sim-field">
+              <label>Message (facultatif)</label>
+              <textarea name="message" rows="3" style="resize:vertical;"></textarea>
+            </div>
+            <input type="hidden" name="ville" id="q-ville">
+            <input type="hidden" name="type" id="q-type">
+            <input type="hidden" name="invites" id="q-invites">
+            <input type="hidden" name="horaires" id="q-horaires">
+            <input type="hidden" name="distance" id="q-distance">
+            <input type="hidden" name="estimation" id="q-estimation">
+            <button type="submit" id="quote-submit">📩 Envoyer la demande de devis</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE CONTACT ═══════════════════════════════ -->
+<div class="page" id="page-contact">
+  <div class="page-inner">
+    <p class="section-label">Aides & Contact</p>
+    <h2 class="section-title">Parlons de votre soirée</h2>
+    <div class="divider"></div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p>Vous avez un projet, une question ou envie de réserver ? N'hésitez pas à nous écrire ou à nous retrouver sur les réseaux !</p>
+        <div class="contact-item">
+          <span class="ico">📧</span>
+          <span><a href="mailto:alban.bontemps33@gmail.com">alban.bontemps33@gmail.com</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="ico">📞</span>
+          <span><a href="tel:+33604148019">06.04.14.80.19</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="ico">💳</span>
+          <span>Paiement accepté : virement · espèces</span>
+        </div>
+        <div class="contact-item">
+          <span class="ico">📍</span>
+          <span>Bordeaux et ses alentours</span>
+        </div>
+        <div class="social-row">
+          <a href="https://www.instagram.com/dj_alb_iance/" target="_blank" class="social-btn">
+            <span>📸</span> Instagram
+          </a>
+          <a href="https://www.tiktok.com/@dj_alb_iance" target="_blank" class="social-btn">
+            <span>🎵</span> TikTok
+          </a>
+        </div>
+      </div>
+      <div>
+        <p style="color:var(--muted); font-size:.85rem; margin-bottom:14px; letter-spacing:.5px;">NOTRE ZONE D'INTERVENTION</p>
+        <div class="map-wrap">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45522.72450157714!2d-0.20024371976637592!3d44.51166544476879!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd5570880ec5ce4f%3A0x40665174816efa0!2s33124%20Auros!5e0!3m2!1sfr!2sfr!4v1779090116287!5m2!1sfr!2sfr"
+            allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <p style="color:var(--muted); font-size:.8rem; margin-top:12px;">Bordeaux &amp; alentours · Nous contacter pour vérifier la disponibilité dans votre secteur.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="logo-foot">ALB-IANCE</span>
+  <p>DJ Animateur professionnel · Bordeaux & alentours</p>
+  <p style="margin-top:6px;">Équipe : Alban · Davy · Daniel · Nicolas · Véronique</p>
+  <p style="margin-top:12px; font-size:.72rem;">© 2025 Alb-iance — Tous droits réservés · Site créé par Alban Bontemps</p>
+</footer>
+
+<script>
+  // ── Barres BG ──
+  const bgBars = document.getElementById('bgBars');
+  for(let i=0; i<60; i++){
+    const s = document.createElement('span');
+    const h = Math.random()*70+20;
+    s.style.cssText = `--h:${h}%;--dur:${(.5+Math.random()*1.5).toFixed(2)}s;--delay:${(Math.random()*2).toFixed(2)}s;height:${h}%`;
+    bgBars.appendChild(s);
+  }
+
+  // ── Navigation ──
+  function showPage(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+id).classList.add('active');
+    document.getElementById('navLinks').classList.remove('open');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  document.getElementById('burger').addEventListener('click',()=>{
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // fermer menu mobile au clic nav link
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open'));
+  });
+
+  // ── Reveal on scroll ──
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('shown'); });
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // ── Simulateur complet ──
+  const SIM_BASE = 150;
+  const SIM_KM_FREE = 10;
+  const SIM_KM_PRICE = 0.5;
+  const SIM_EVENT = { privee:10, anniversaire:20, mariage:25, entreprise:10 };
+
+  function simGuestCost(g){ return g<=25 ? 0 : Math.ceil((g-25)/5)*3; }
+  function simHourToNum(t){ return parseInt(t.split(':')[0]); }
+  function simDuration(s,e){ let sh=simHourToNum(s),eh=simHourToNum(e); if(eh<sh) eh+=24; return eh-sh; }
+  function simHourCost(s,e){
+    let cost=Math.max(0,simDuration(s,e)-4)*20;
+    if(e==='04:00') cost+=50; else if(e>='02:00') cost+=30;
+    return cost;
+  }
+  async function simGetDistance(city){
+    try{
+      const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city+', France')}`,{headers:{'User-Agent':'DJ Alb-iance Simulator'}});
+      const d=await r.json();
+      if(!d.length) return null;
+      const lat1=44.4879,lon1=-0.1227,lat2=parseFloat(d[0].lat),lon2=parseFloat(d[0].lon);
+      const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;
+      const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+      return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+    }catch{ return null; }
+  }
+
+  async function runSim(){
+    const rBox=document.getElementById('sim-result-box');
+    const pDisplay=document.getElementById('sim-price-display');
+    const rNote=document.getElementById('sim-result-note');
+    const devisSection=document.getElementById('devisSection');
+    rBox.style.display='block'; rBox.className=''; pDisplay.style.cssText='';
+    pDisplay.textContent='Calcul en cours…'; rNote.textContent='';
+
+    const city=document.getElementById('sim-city').value.trim();
+    const start=document.getElementById('sim-start').value;
+    const end=document.getElementById('sim-end').value;
+    const guests=parseInt(document.getElementById('sim-guests').value)||0;
+    const evtKey=document.getElementById('sim-event').value;
+
+    if(!city){ showSimError('❌ Merci de saisir une ville.'); return; }
+    if(simHourToNum(start)<19){ showSimError('❌ L\'heure de début doit être après 19h00.'); return; }
+
+    const distance=await simGetDistance(city);
+    if(distance===null){ showSimError('❌ Ville introuvable. Essayez un nom plus précis.'); return; }
+
+    let price=SIM_BASE+SIM_EVENT[evtKey]+simGuestCost(guests)+simHourCost(start,end);
+    if(distance>SIM_KM_FREE) price+=(distance-SIM_KM_FREE)*SIM_KM_PRICE;
+    price=Math.round(price);
+
+    pDisplay.textContent=price+' €';
+    pDisplay.style.cssText='font-family:Bebas Neue,sans-serif;font-size:3.5rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;';
+    rNote.textContent=`Estimation indicative (≈ ${distance} km) · Contactez-nous pour un devis personnalisé`;
+
+    devisSection.style.display='block';
+    document.getElementById('q-ville').value=city;
+    document.getElementById('q-type').value=evtKey;
+    document.getElementById('q-invites').value=guests;
+    document.getElementById('q-horaires').value=`${start} → ${end}`;
+    document.getElementById('q-distance').value=`${distance} km`;
+    document.getElementById('q-estimation').value=`${price} €`;
+  }
+  function showSimError(msg){
+    const rBox=document.getElementById('sim-result-box');
+    const pDisplay=document.getElementById('sim-price-display');
+    rBox.style.display='block'; rBox.className='error-box';
+    pDisplay.style.cssText='font-size:1rem;color:#ef4444;-webkit-text-fill-color:#ef4444;';
+    pDisplay.textContent=msg;
+    document.getElementById('sim-result-note').textContent='';
+    document.getElementById('devisSection').style.display='none';
+  }
+</script>
+</body>
+</html>
