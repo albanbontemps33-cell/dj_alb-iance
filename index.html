@@ -311,6 +311,100 @@
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s, transform .6s; }
   .reveal.shown { opacity: 1; transform: none; }
 
+  /* ── STATS COUNTER ── */
+  .stats-bar {
+    display: flex; flex-wrap: wrap; gap: 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden; margin: 60px 0 0;
+  }
+  .stat-item {
+    flex: 1; min-width: 160px; padding: 30px 24px;
+    text-align: center; position: relative;
+  }
+  .stat-item:not(:last-child)::after {
+    content: ''; position: absolute; right: 0; top: 20%; bottom: 20%;
+    width: 1px; background: var(--border);
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem; line-height: 1;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    display: block;
+  }
+  .stat-label { font-size: .78rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; display: block; }
+
+  /* ── GALERIE PHOTOS/VIDÉOS ── */
+  .gallery-section { padding-top: 60px; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 12px;
+  }
+  .gallery-item {
+    border-radius: 12px; overflow: hidden;
+    background: var(--card); border: 1px solid var(--border);
+    position: relative; cursor: pointer;
+    transition: transform .3s, box-shadow .3s;
+  }
+  .gallery-item:hover { transform: scale(1.02); box-shadow: 0 12px 40px rgba(168,85,247,.25); }
+  .gallery-item.large { grid-column: span 2; }
+  .gallery-item img, .gallery-item video {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    min-height: 200px;
+  }
+  .gallery-item video { max-height: 280px; }
+  .gallery-play {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.35); pointer-events: none;
+  }
+  .gallery-play span { font-size: 3rem; filter: drop-shadow(0 0 12px rgba(168,85,247,.8)); }
+  @media (max-width: 600px) {
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item.large { grid-column: span 2; }
+  }
+
+  /* ── LIGHTBOX ── */
+  #lightbox {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,.92); align-items: center; justify-content: center;
+  }
+  #lightbox.open { display: flex; }
+  #lightbox-close {
+    position: absolute; top: 20px; right: 24px; font-size: 2rem;
+    color: var(--muted); cursor: pointer; z-index: 10; background: none; border: none; line-height: 1;
+    transition: color .2s;
+  }
+  #lightbox-close:hover { color: var(--text); }
+  #lightbox-content { max-width: 90vw; max-height: 90vh; border-radius: 12px; overflow: hidden; }
+  #lightbox-content img, #lightbox-content video { max-width: 90vw; max-height: 90vh; border-radius: 12px; }
+
+  /* ── FAQ ── */
+  .faq-list { display: flex; flex-direction: column; gap: 12px; }
+  .faq-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden; transition: border-color .3s;
+  }
+  .faq-item.open { border-color: rgba(168,85,247,.4); }
+  .faq-q {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px; cursor: pointer; font-weight: 500; font-size: .95rem;
+    gap: 16px; user-select: none;
+  }
+  .faq-q:hover { color: var(--accent); }
+  .faq-icon {
+    flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(168,85,247,.12); display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; color: var(--accent); transition: transform .3s;
+  }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .3s;
+    color: var(--muted); font-size: .9rem; line-height: 1.75; padding: 0 24px;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+
   /* ── MOBILE NAV ── */
   @media (max-width: 768px) {
     nav { padding: 16px 20px; }
@@ -375,7 +469,57 @@
     </div>
   </div>
 
+  <!-- Compteur de stats -->
+  <div style="padding: 0 40px; max-width: 1100px; margin-inline: auto;">
+    <div class="stats-bar reveal">
+      <div class="stat-item">
+        <span class="stat-num" data-target="30">0</span>
+        <span class="stat-label">Soirées animées</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">4.7<span style="font-size:1.8rem;">⭐</span></span>
+        <span class="stat-label">Note Google</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" data-target="2">0</span>
+        <span class="stat-label">Ans d'expérience</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">5</span>
+        <span class="stat-label">DJs & animateurs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Galerie photos & vidéos -->
+  <section class="gallery-section">
+    <p class="section-label reveal">En action</p>
+    <h2 class="section-title reveal">Nos soirées</h2>
+    <div class="divider reveal"></div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item large" onclick="openLightbox('img','image.jpeg')">
+        <img src="image.jpeg" alt="Soirée Alb-iance" loading="lazy">
+      </div>
+      <div class="gallery-item" onclick="openLightbox('img','image2.jpeg')">
+        <img src="image2.jpeg" alt="Soirée Alb-iance" loading="lazy">
+      </div>
+      <div class="gallery-item" onclick="openLightbox('video','video.mp4')">
+        <video src="video.mp4" muted preload="metadata"></video>
+        <div class="gallery-play"><span>▶</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('video','video2.mp4')">
+        <video src="video2.mp4" muted preload="metadata"></video>
+        <div class="gallery-play"><span>▶</span></div>
+      </div>
+      <div class="gallery-item large" onclick="openLightbox('video','video3.mp4')">
+        <video src="video3.mp4" muted preload="metadata"></video>
+        <div class="gallery-play"><span>▶</span></div>
+      </div>
+    </div>
+  </section>
+
   <!-- Présentation -->
+
   <section>
     <p class="section-label reveal">À propos</p>
     <h2 class="section-title reveal">Qui sommes-nous ?</h2>
@@ -625,7 +769,58 @@
       </div>
     </div>
 
-    <div class="contact-grid">
+    <!-- FAQ -->
+    <section style="padding-top:70px; padding-inline:0;">
+      <p class="section-label">Questions fréquentes</p>
+      <h2 class="section-title">FAQ</h2>
+      <div class="divider"></div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>📍 Vous intervenez dans quelles zones ?</span>
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Nous sommes basés à Auros (33) et intervenons principalement sur Bordeaux & la Gironde, les Landes et le Lot-et-Garonne. Vous n'êtes pas dans ces secteurs ? Contactez-nous quand même, on s'adapte !</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>🎵 Peut-on choisir la musique et faire des demandes ?</span>
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Oui, totalement ! Vous êtes libres de nous soumettre vos morceaux favoris, artistes ou ambiances souhaitées avant la soirée. On s'adapte à votre goût musical pour que tout le monde passe une super soirée.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>⏱️ Quel est le délai minimum pour réserver ?</span>
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Nous recommandons de réserver au moins 1 semaine à l'avance pour garantir notre disponibilité. Pour les mariages et événements importants, plus tôt c'est mieux ! N'hésitez pas à nous contacter même en urgence, on fait notre possible.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>🔊 Vous fournissez le matériel son & lumière ?</span>
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Oui, on s'occupe de tout ! Sonorisation, jeux de lumière, machine à fumée, lyres… tout notre matériel pro est inclus. Vous n'avez rien à prévoir de votre côté.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>🔧 Que se passe-t-il en cas de panne matérielle ?</span>
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Nous disposons de matériel de secours partiel pour faire face aux imprévus. La soirée ne s'arrête pas pour une panne ! Nous faisons le maximum pour assurer la continuité de l'animation.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>💳 Quels sont les modes de paiement acceptés ?</span>
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Nous acceptons le virement bancaire et les espèces. Un acompte peut être demandé à la réservation pour confirmer la date. Contactez-nous pour en discuter !</div>
+        </div>
+      </div>
+    </section>
+
+
       <!-- FORMULAIRE -->
       <div>
         <p style="color:var(--muted);margin-bottom:24px;font-size:.9rem;">Remplissez ce formulaire, je vous réponds rapidement !</p>
@@ -772,6 +967,12 @@
   </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox(event)">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div id="lightbox-content"></div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <span class="logo-foot">ALB-IANCE</span>
@@ -915,7 +1116,60 @@
     document.getElementById('q-distance').value=`${distance} km`;
     document.getElementById('q-estimation').value=`${price} €`;
   }
-  function showSimError(msg){
+
+  // ── Lightbox ──
+  function openLightbox(type, src) {
+    const lb = document.getElementById('lightbox');
+    const content = document.getElementById('lightbox-content');
+    if (type === 'img') {
+      content.innerHTML = `<img src="${src}" alt="Soirée Alb-iance">`;
+    } else {
+      content.innerHTML = `<video src="${src}" controls autoplay style="max-width:90vw;max-height:85vh;border-radius:12px;"></video>`;
+    }
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(e) {
+    if (e && e.target !== document.getElementById('lightbox') && e.target !== document.getElementById('lightbox-close')) return;
+    const lb = document.getElementById('lightbox');
+    lb.classList.remove('open');
+    document.getElementById('lightbox-content').innerHTML = '';
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLightbox({target: document.getElementById('lightbox')}); } });
+
+  // ── FAQ ──
+  function toggleFaq(el) {
+    const item = el.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // ── Compteur animé ──
+  function animateCounter(el, target, duration = 1500) {
+    let start = 0;
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      el.textContent = Math.floor(progress * target);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    };
+    requestAnimationFrame(step);
+  }
+  const counterObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const target = parseInt(e.target.dataset.target);
+        if (!isNaN(target)) animateCounter(e.target, target);
+        counterObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: .5 });
+  document.querySelectorAll('[data-target]').forEach(el => counterObs.observe(el));
+
+
     const rBox=document.getElementById('sim-result-box');
     const pDisplay=document.getElementById('sim-price-display');
     rBox.style.display='block'; rBox.className='error-box';
