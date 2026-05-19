@@ -375,6 +375,28 @@
     </div>
   </div>
 
+  <!-- ── STATS ── -->
+  <section style="padding-top:60px; padding-bottom:60px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:20px; text-align:center;">
+      <div class="card reveal" style="padding:32px 20px;">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:3rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" class="counter" data-target="40">0</div>
+        <div style="color:var(--muted); font-size:.85rem; margin-top:6px; letter-spacing:.5px;">SOIRÉES ANIMÉES</div>
+      </div>
+      <div class="card reveal" style="padding:32px 20px;">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:3rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">4,5 ⭐</div>
+        <div style="color:var(--muted); font-size:.85rem; margin-top:6px; letter-spacing:.5px;">NOTE GOOGLE</div>
+      </div>
+      <div class="card reveal" style="padding:32px 20px;">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:3rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" class="counter" data-target="50">0</div>
+        <div style="color:var(--muted); font-size:.85rem; margin-top:6px; letter-spacing:.5px;">KM DE RAYON</div>
+      </div>
+      <div class="card reveal" style="padding:32px 20px;">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:3rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">100%</div>
+        <div style="color:var(--muted); font-size:.85rem; margin-top:6px; letter-spacing:.5px;">MATÉRIEL FOURNI</div>
+      </div>
+    </div>
+  </section>
+
   <!-- Présentation -->
   <section>
     <p class="section-label reveal">À propos</p>
@@ -400,6 +422,165 @@
         <span class="card-icon">📍</span>
         <h3>Basé à Auros (33)</h3>
         <p>Nous intervenons sur Bordeaux, les Landes et le Lot-et-Garonne. N'hésitez pas à nous contacter pour vérifier notre disponibilité dans votre secteur.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GALERIE ── -->
+  <section>
+    <p class="section-label reveal">Ambiance</p>
+    <h2 class="section-title reveal">Nos soirées</h2>
+    <div class="divider reveal"></div>
+    <p style="color:var(--muted); margin-bottom:32px;" class="reveal">Un aperçu de l'ambiance que l'on crée sur chaque événement ✨</p>
+
+    <style>
+      .gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+      @media(max-width:700px){ .gallery { grid-template-columns:1fr 1fr; } }
+      @media(max-width:440px){ .gallery { grid-template-columns:1fr; } }
+      .gallery-item {
+        border-radius:14px; overflow:hidden; position:relative;
+        aspect-ratio:16/10; cursor:pointer;
+        border:1px solid var(--border);
+        transition:transform .3s, box-shadow .3s;
+      }
+      .gallery-item:hover { transform:scale(1.03); box-shadow:0 20px 40px rgba(168,85,247,.25); }
+      .gallery-item img, .gallery-item video {
+        width:100%; height:100%; object-fit:cover; display:block;
+      }
+      .gallery-item .play-ico {
+        position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+        background:rgba(0,0,0,.3); font-size:2.5rem;
+        opacity:0; transition:opacity .3s;
+      }
+      .gallery-item:hover .play-ico { opacity:1; }
+      /* LIGHTBOX */
+      .lightbox {
+        display:none; position:fixed; inset:0; z-index:999;
+        background:rgba(0,0,0,.92); align-items:center; justify-content:center;
+        padding:20px;
+      }
+      .lightbox.open { display:flex; }
+      .lightbox-inner { position:relative; max-width:900px; width:100%; }
+      .lightbox-inner img, .lightbox-inner video { width:100%; border-radius:16px; max-height:80vh; object-fit:contain; }
+      .lightbox-close {
+        position:absolute; top:-40px; right:0; background:none; border:none;
+        color:#fff; font-size:2rem; cursor:pointer; line-height:1;
+      }
+      .lightbox-nav {
+        position:absolute; top:50%; transform:translateY(-50%);
+        background:rgba(168,85,247,.3); border:none; color:#fff;
+        font-size:1.8rem; width:44px; height:44px; border-radius:50%;
+        cursor:pointer; transition:background .2s; display:flex; align-items:center; justify-content:center;
+      }
+      .lightbox-nav:hover { background:var(--accent); }
+      .lightbox-prev { left:-56px; }
+      .lightbox-next { right:-56px; }
+      @media(max-width:700px){ .lightbox-prev { left:0; } .lightbox-next { right:0; } }
+    </style>
+
+    <div class="gallery reveal">
+      <div class="gallery-item" onclick="openLightbox(0)">
+        <img src="https://raw.githubusercontent.com/albanbontemps33-cell/dj_alb-iance/main/image.jpeg" alt="Soirée Alb-iance" loading="lazy">
+      </div>
+      <div class="gallery-item" onclick="openLightbox(1)">
+        <img src="https://raw.githubusercontent.com/albanbontemps33-cell/dj_alb-iance/main/image2.jpeg" alt="Soirée Alb-iance" loading="lazy">
+      </div>
+      <div class="gallery-item" onclick="openLightbox(2)">
+        <video src="https://raw.githubusercontent.com/albanbontemps33-cell/dj_alb-iance/main/video.mp4" muted loop playsinline preload="metadata"></video>
+        <div class="play-ico">▶️</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(3)">
+        <video src="https://raw.githubusercontent.com/albanbontemps33-cell/dj_alb-iance/main/video2.mp4" muted loop playsinline preload="metadata"></video>
+        <div class="play-ico">▶️</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(4)">
+        <video src="https://raw.githubusercontent.com/albanbontemps33-cell/dj_alb-iance/main/video3.mp4" muted loop playsinline preload="metadata"></video>
+        <div class="play-ico">▶️</div>
+      </div>
+      <div class="gallery-item" onclick="showPage('contact')" style="background:linear-gradient(135deg,rgba(168,85,247,.15),rgba(236,72,153,.1)); border-color:rgba(168,85,247,.3); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px; cursor:pointer;">
+        <span style="font-size:2.5rem;">📅</span>
+        <span style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:3px; color:var(--accent);">RÉSERVER MA DATE</span>
+      </div>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+      <div class="lightbox-inner" id="lightbox-inner">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <button class="lightbox-nav lightbox-prev" onclick="lbNav(-1)">‹</button>
+        <button class="lightbox-nav lightbox-next" onclick="lbNav(1)">›</button>
+        <div id="lightbox-content"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section>
+    <p class="section-label reveal">Questions fréquentes</p>
+    <h2 class="section-title reveal">FAQ</h2>
+    <div class="divider reveal"></div>
+
+    <style>
+      .faq-list { max-width:760px; margin-inline:auto; display:flex; flex-direction:column; gap:12px; }
+      .faq-item {
+        background:var(--card); border:1px solid var(--border); border-radius:14px;
+        overflow:hidden; transition:border-color .3s;
+      }
+      .faq-item.open { border-color:rgba(168,85,247,.4); }
+      .faq-q {
+        width:100%; background:none; border:none; color:var(--text);
+        font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600;
+        padding:22px 24px; text-align:left; cursor:pointer;
+        display:flex; justify-content:space-between; align-items:center; gap:16px;
+      }
+      .faq-q span.faq-arrow {
+        font-size:1.2rem; transition:transform .3s; flex-shrink:0;
+        color:var(--accent);
+      }
+      .faq-item.open .faq-arrow { transform:rotate(45deg); }
+      .faq-a {
+        max-height:0; overflow:hidden; transition:max-height .4s ease, padding .3s;
+        color:var(--muted); font-size:.9rem; line-height:1.8; padding:0 24px;
+      }
+      .faq-item.open .faq-a { max-height:200px; padding:0 24px 22px; }
+    </style>
+
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Vous intervenez jusqu'où ? <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Nous intervenons dans un rayon de 50 km autour d'Auros (33), couvrant Bordeaux, les Landes et le Lot-et-Garonne. Au-delà, des frais de déplacement peuvent s'appliquer — contactez-nous pour en discuter !</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Peut-on choisir la musique ? <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Oui, totalement ! Vous pouvez nous transmettre vos titres favoris, vos artistes ou vos genres musicaux avant la soirée. On s'adapte à 100% à vos goûts et à l'ambiance souhaitée.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Quel délai pour réserver ? <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Nous demandons un minimum d'une semaine avant l'événement pour bien préparer votre soirée. Mais plus vous réservez tôt, mieux c'est pour garantir votre date !</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Le matériel son & lumière est-il fourni ? <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Oui, tout le matériel est inclus ! Sono, jeux de lumière, lyres, machine à fumée, contrôleur DJ… Vous n'avez rien à prévoir, on arrive avec tout le nécessaire.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Quels moyens de paiement acceptez-vous ? <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Nous acceptons le virement bancaire et les espèces. Un acompte est demandé à la réservation pour confirmer votre date dans notre agenda.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Un acompte est-il nécessaire ? <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Oui, un acompte est demandé pour confirmer officiellement votre réservation. Il vous garantit que votre date est bloquée dans notre planning. Le solde est réglé le jour de l'événement.</div>
       </div>
     </div>
   </section>
