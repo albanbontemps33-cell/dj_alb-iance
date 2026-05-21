@@ -336,6 +336,7 @@
     <li><a href="#" onclick="showPage('home')">Accueil</a></li>
     <li><a href="#" onclick="showPage('outils')">Outils d'animation</a></li>
     <li><a href="#" onclick="showPage('avis')">Avis clients</a></li>
+    <li><a href="#" onclick="showPage('mesmix')">🎵 Mes Mix</a></li>
     <li><a href="#" onclick="showPage('tarifs')">Simulation</a></li>
     <li><a href="#" onclick="showPage('contact')">Contact</a></li>
     <li><a href="#" class="nav-cta" onclick="showPage('contact')">Réserver</a></li>
@@ -1105,6 +1106,224 @@
     document.getElementById('sim-result-note').textContent='';
     document.getElementById('devisSection').style.display='none';
   }
+
+  // ── Formulaire devis simulateur ──
+  async function quoteSubmit(e){
+    e.preventDefault();
+    const btn=document.getElementById('quote-submit');
+    btn.textContent='Envoi en cours…'; btn.disabled=true;
+    try{
+      const resp=await fetch(e.target.action,{method:'POST',body:new FormData(e.target),headers:{'Accept':'application/json'}});
+      if(resp.ok){ document.getElementById('quote-form').style.display='none'; document.getElementById('quote-success').style.display='block'; }
+      else{ btn.textContent='❌ Erreur, réessayez'; btn.disabled=false; }
+    }catch{ btn.textContent='❌ Erreur réseau'; btn.disabled=false; }
+  }
+
+  // ── Formulaire contact ──
+  async function cfSubmit(e){
+    e.preventDefault();
+    const btn=document.getElementById('cf-submit');
+    btn.textContent='Envoi en cours…'; btn.disabled=true;
+    try{
+      const resp=await fetch(e.target.action,{method:'POST',body:new FormData(e.target),headers:{'Accept':'application/json'}});
+      if(resp.ok){ document.getElementById('cf-form').style.display='none'; document.getElementById('cf-success').style.display='block'; }
+      else{ btn.textContent='❌ Erreur, réessayez'; btn.disabled=false; }
+    }catch{ btn.textContent='❌ Erreur réseau'; btn.disabled=false; }
+  }
+
+  // ── FAQ ──
+  function toggleFaq(btn){
+    const item=btn.closest('.faq-item');
+    const isOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
+  }
+
+  // ── COMPTEURS animés ──
+  function animateCounters(){
+    document.querySelectorAll('.counter').forEach(el=>{
+      const target=parseInt(el.dataset.target);
+      let current=0;
+      const step=Math.ceil(target/40);
+      const timer=setInterval(()=>{
+        current=Math.min(current+step, target);
+        el.textContent=current+(el.dataset.suffix||'');
+        if(current>=target) clearInterval(timer);
+      },30);
+    });
+  }
+  // Lancer les compteurs quand la section est visible
+  const counterObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ animateCounters(); counterObs.disconnect(); } });
+  },{threshold:.3});
+  const firstCounter=document.querySelector('.counter');
+  if(firstCounter) counterObs.observe(firstCounter.closest('section'));
+
+  // ── GALERIE LIGHTBOX ──
+  const lbMedia=[
+    {type:'img', src:'https://raw.githubusercontent.com/albanbontemps33-cell/dj_alb-iance/main/image.jpeg'},
+    {type:'img', src:'https://raw.githubusercontent.com/albanbontemps33-cell/dj_alb-iance/main/image2.jpeg'},
+    {type:'video', src:'https://raw.githubusercontent.com/albanbontemps33-cell/dj_alb-iance/main/video.mp4'},
+    {type:'video', src:'https://raw.githubusercontent.com/albanbontemps33-cell/dj_alb-iance/main/video2.mp4'},
+    {type:'video', src:'https://raw.githubusercontent.com/albanbontemps33-cell/dj_alb-iance/main/video3.mp4'},
+  ];
+  let lbCurrent=0;
+
+  function openLightbox(idx){
+    lbCurrent=idx;
+    renderLightbox();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeLightbox(){
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow='';
+    document.getElementById('lightbox-content').innerHTML='';
+  }
+  function closeLightboxOutside(e){
+    if(e.target===document.getElementById('lightbox')) closeLightbox();
+  }
+  function lbNav(dir){
+    lbCurrent=(lbCurrent+dir+lbMedia.length)%lbMedia.length;
+    renderLightbox();
+  }
+  function renderLightbox(){
+    const m=lbMedia[lbCurrent];
+    const c=document.getElementById('lightbox-content');
+    if(m.type==='img'){
+      c.innerHTML=`<img src="${m.src}" alt="Soirée Alb-iance">`;
+    } else {
+      c.innerHTML=`<video src="${m.src}" controls autoplay style="width:100%;border-radius:16px;max-height:80vh;"></video>`;
+    }
+  }
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLightbox(); if(e.key==='ArrowLeft') lbNav(-1); if(e.key==='ArrowRight') lbNav(1); });
+
+  // Hover play sur les vidéos de la galerie
+  document.querySelectorAll('.gallery-item video').forEach(v=>{
+    v.closest('.gallery-item').addEventListener('mouseenter',()=>v.play());
+    v.closest('.gallery-item').addEventListener('mouseleave',()=>{ v.pause(); v.currentTime=0; });
+  });
+
+  // ── PLAYER AUDIO ──
+  const tracks=[
+    { title:'Elle danse sexy × Hay Lupita', file:'https://drive.google.com/uc?export=download&id=1vzVawWVpzcJSxU1WTlDN_HUVd8PdMZ9m', start:77, end:117 },
+    { title:'Party Rock Anthem × Freed From Desire', file:'https://drive.google.com/uc?export=download&id=1bXJYmkkx3GHlU6bZc-iGPN4sBsjB08RL', start:117, end:157 },
+    { title:'Get Busy × Gasolina', file:'https://drive.google.com/uc?export=download&id=1a1ON7XBfRvBfN7Dk60W9F5JHvk_zBSV1', start:75, end:115 },
+  ];
+  let playerTrack=0;
+  let playerAudio=null;
+  let playerPlaying=false;
+  let playerEndTimer=null;
+
+  // Créer le player HTML
+  const playerHTML=`
+  <div id="mini-player" style="
+    position:fixed; bottom:0; left:0; right:0; z-index:200;
+    background:rgba(13,13,26,0.97); backdrop-filter:blur(20px);
+    border-top:1px solid rgba(168,85,247,.25);
+    display:flex; align-items:center; gap:16px;
+    padding:12px 24px; box-shadow:0 -10px 40px rgba(168,85,247,.15);
+  ">
+    <!-- Icône DJ -->
+    <span style="font-size:1.4rem; flex-shrink:0;">🎧</span>
+
+    <!-- Infos piste -->
+    <div style="flex:1; min-width:0;">
+      <div id="player-title" style="font-size:.82rem; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${tracks[0].title}</div>
+      <div style="font-size:.72rem; color:var(--accent); letter-spacing:.5px; margin-top:2px;">EXTRAIT · TRANSITION</div>
+    </div>
+
+    <!-- Barre de progression -->
+    <div style="flex:2; display:flex; align-items:center; gap:10px; min-width:0;">
+      <span id="player-time" style="font-size:.75rem; color:var(--muted); flex-shrink:0;">0:00</span>
+      <div id="player-bar-wrap" onclick="playerSeek(event)" style="flex:1; height:4px; background:var(--border); border-radius:2px; cursor:pointer; position:relative;">
+        <div id="player-bar" style="height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width .2s; pointer-events:none;"></div>
+      </div>
+      <span id="player-dur" style="font-size:.75rem; color:var(--muted); flex-shrink:0;">0:40</span>
+    </div>
+
+    <!-- Contrôles -->
+    <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+      <button onclick="playerPrev()" title="Précédent" style="background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px;transition:color .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">⏮</button>
+      <button id="player-playbtn" onclick="playerToggle()" style="
+        width:40px; height:40px; border-radius:50%; border:none; cursor:pointer;
+        background:linear-gradient(135deg,var(--accent),var(--accent2));
+        color:#fff; font-size:1rem; display:flex; align-items:center; justify-content:center;
+        box-shadow:0 0 16px var(--accent-glow); transition:opacity .2s;
+      ">▶</button>
+      <button onclick="playerNext()" title="Suivant" style="background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px;transition:color .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">⏭</button>
+    </div>
+
+    <!-- Pistes -->
+    <div style="display:flex; gap:6px; flex-shrink:0;">
+      ${tracks.map((t,i)=>`<button onclick="playerLoad(${i},true)" id="ptrack-${i}" style="
+        width:28px; height:28px; border-radius:50%; border:1px solid var(--border);
+        background:${i===0?'linear-gradient(135deg,var(--accent),var(--accent2))':'var(--card)'};
+        color:#fff; font-size:.72rem; cursor:pointer; font-weight:600; transition:all .2s;
+      ">${i+1}</button>`).join('')}
+    </div>
+  </div>`;
+
+  document.body.insertAdjacentHTML('beforeend', playerHTML);
+  // Ajuster le padding du body pour ne pas cacher le contenu
+  document.body.style.paddingBottom='70px';
+
+  function playerLoad(idx, autoplay=false){
+    playerTrack=idx;
+    if(playerAudio){ playerAudio.pause(); clearTimeout(playerEndTimer); }
+    playerAudio=new Audio(tracks[idx].file);
+    playerAudio.currentTime=tracks[idx].start;
+    document.getElementById('player-title').textContent=tracks[idx].title;
+    // Mettre à jour les boutons de piste
+    tracks.forEach((_,i)=>{
+      const b=document.getElementById('ptrack-'+i);
+      b.style.background=i===idx?'linear-gradient(135deg,var(--accent),var(--accent2))':'var(--card)';
+    });
+    playerAudio.addEventListener('timeupdate', playerUpdate);
+    if(autoplay){ playerAudio.play(); playerPlaying=true; document.getElementById('player-playbtn').textContent='⏸'; }
+    else { playerPlaying=false; document.getElementById('player-playbtn').textContent='▶'; }
+  }
+
+  function playerUpdate(){
+    if(!playerAudio) return;
+    const elapsed=playerAudio.currentTime - tracks[playerTrack].start;
+    const total=tracks[playerTrack].end - tracks[playerTrack].start;
+    const pct=Math.max(0,Math.min(100,(elapsed/total)*100));
+    document.getElementById('player-bar').style.width=pct+'%';
+    document.getElementById('player-time').textContent=fmtTime(Math.max(0,elapsed));
+    document.getElementById('player-dur').textContent=fmtTime(total);
+    // Auto next à la fin
+    if(playerAudio.currentTime >= tracks[playerTrack].end){
+      playerNext();
+    }
+  }
+
+  function playerToggle(){
+    if(!playerAudio) playerLoad(playerTrack, true);
+    else if(playerPlaying){ playerAudio.pause(); playerPlaying=false; document.getElementById('player-playbtn').textContent='▶'; }
+    else { playerAudio.play(); playerPlaying=true; document.getElementById('player-playbtn').textContent='⏸'; }
+  }
+
+  function playerNext(){
+    playerLoad((playerTrack+1)%tracks.length, playerPlaying);
+  }
+  function playerPrev(){
+    playerLoad((playerTrack-1+tracks.length)%tracks.length, playerPlaying);
+  }
+
+  function playerSeek(e){
+    if(!playerAudio) return;
+    const rect=e.currentTarget.getBoundingClientRect();
+    const pct=(e.clientX-rect.left)/rect.width;
+    const total=tracks[playerTrack].end-tracks[playerTrack].start;
+    playerAudio.currentTime=tracks[playerTrack].start+(pct*total);
+  }
+
+  function fmtTime(s){ const m=Math.floor(s/60); const sec=Math.floor(s%60); return m+':'+(sec<10?'0':'')+sec; }
+
+  // Charger la première piste au démarrage (sans autoplay)
+  playerLoad(0, false);
+
 </script>
 </body>
 </html>
