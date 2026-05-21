@@ -80,6 +80,7 @@
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
+  .nav-cta {
     background: linear-gradient(135deg, var(--accent), var(--accent2)) !important;
     color: #fff !important; font-weight: 500 !important;
     padding: 8px 20px !important; border-radius: 50px !important;
@@ -785,6 +786,169 @@
   </div>
 </div>
 
+<!-- ═══════════════════════════════ PAGE MES MIX ═══════════════════════════════ -->
+<div class="page" id="page-mesmix">
+  <div class="page-inner">
+    <p class="section-label">Exemples de transitions</p>
+    <h2 class="section-title">Mes Mix</h2>
+    <div class="divider"></div>
+    <p style="color:var(--muted); margin-bottom:48px; max-width:580px;">Écoute un aperçu de mes transitions en live. Ces extraits ont été mixés lors de vraies soirées — un avant-goût de l'ambiance que je crée !</p>
+
+    <style>
+      .mix-list { display:flex; flex-direction:column; gap:24px; max-width:720px; margin-inline:auto; }
+      .mix-card {
+        background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+        padding: 28px 32px; display: flex; flex-direction: column; gap: 16px;
+        transition: border-color .3s, box-shadow .3s; position: relative; overflow: hidden;
+      }
+      .mix-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: 0; transition: opacity .3s;
+      }
+      .mix-card:hover { border-color: rgba(168,85,247,.4); box-shadow: 0 16px 40px rgba(168,85,247,.12); }
+      .mix-card:hover::before { opacity: 1; }
+      .mix-card-header { display: flex; align-items: center; gap: 16px; }
+      .mix-num {
+        width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        display: flex; align-items: center; justify-content: center;
+        font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: #fff;
+        box-shadow: 0 0 20px var(--accent-glow);
+      }
+      .mix-info { flex: 1; min-width: 0; }
+      .mix-title { font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
+      .mix-tag { font-size: .72rem; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
+      .mix-play-btn {
+        width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 0 16px var(--accent-glow); transition: transform .2s, opacity .2s;
+        flex-shrink: 0;
+      }
+      .mix-play-btn:hover { transform: scale(1.1); }
+      .mix-player-wrap { display: flex; align-items: center; gap: 12px; }
+      .mix-progress-wrap {
+        flex: 1; height: 5px; background: var(--border); border-radius: 3px; cursor: pointer; position: relative;
+      }
+      .mix-progress-bar {
+        height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent2));
+        border-radius: 3px; transition: width .1s linear; pointer-events: none;
+      }
+      .mix-time { font-size: .75rem; color: var(--muted); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+      .mix-loading { font-size: .72rem; color: var(--muted); font-style: italic; }
+      .mix-eq { display: flex; align-items: flex-end; gap: 2px; height: 18px; flex-shrink: 0; }
+      .mix-eq-bar {
+        width: 3px; background: linear-gradient(to top, var(--accent2), var(--accent));
+        border-radius: 2px; animation: eq var(--d,.7s) ease-in-out infinite alternate;
+        animation-delay: var(--dl,0s); display: none;
+      }
+      .mix-card.playing .mix-eq-bar { display: block; }
+      @media(max-width:560px){
+        .mix-card { padding: 20px; }
+        .mix-card-header { flex-wrap: wrap; }
+      }
+    </style>
+
+    <div class="mix-list" id="mixList">
+
+      <div class="mix-card" id="mixcard-0">
+        <div class="mix-card-header">
+          <div class="mix-num">1</div>
+          <div class="mix-info">
+            <div class="mix-title">Elle danse sexy × Hay Lupita</div>
+            <div class="mix-tag">Transition live · Extrait</div>
+          </div>
+          <div class="mix-eq">
+            <div class="mix-eq-bar" style="--d:.6s;--dl:0s;--h:14px"></div>
+            <div class="mix-eq-bar" style="--d:.8s;--dl:.1s;--h:18px"></div>
+            <div class="mix-eq-bar" style="--d:.5s;--dl:.2s;--h:10px"></div>
+            <div class="mix-eq-bar" style="--d:.7s;--dl:.05s;--h:16px"></div>
+          </div>
+          <button class="mix-play-btn" id="mixbtn-0" onclick="mixToggle(0)">▶</button>
+        </div>
+        <div class="mix-player-wrap">
+          <span class="mix-time" id="mixtime-0">0:00</span>
+          <div class="mix-progress-wrap" onclick="mixSeek(0, event)">
+            <div class="mix-progress-bar" id="mixbar-0"></div>
+          </div>
+          <span class="mix-time" id="mixdur-0">0:40</span>
+        </div>
+        <div class="mix-loading" id="mixload-0"></div>
+        <audio id="mixaudio-0" preload="none"
+          src="https://drive.google.com/uc?export=download&id=1vzVawWVpzcJSxU1WTlDN_HUVd8PdMZ9m"
+          data-start="77" data-end="117">
+        </audio>
+      </div>
+
+      <div class="mix-card" id="mixcard-1">
+        <div class="mix-card-header">
+          <div class="mix-num">2</div>
+          <div class="mix-info">
+            <div class="mix-title">Party Rock Anthem × Freed From Desire</div>
+            <div class="mix-tag">Transition live · Extrait</div>
+          </div>
+          <div class="mix-eq">
+            <div class="mix-eq-bar" style="--d:.6s;--dl:0s;--h:14px"></div>
+            <div class="mix-eq-bar" style="--d:.8s;--dl:.1s;--h:18px"></div>
+            <div class="mix-eq-bar" style="--d:.5s;--dl:.2s;--h:10px"></div>
+            <div class="mix-eq-bar" style="--d:.7s;--dl:.05s;--h:16px"></div>
+          </div>
+          <button class="mix-play-btn" id="mixbtn-1" onclick="mixToggle(1)">▶</button>
+        </div>
+        <div class="mix-player-wrap">
+          <span class="mix-time" id="mixtime-1">0:00</span>
+          <div class="mix-progress-wrap" onclick="mixSeek(1, event)">
+            <div class="mix-progress-bar" id="mixbar-1"></div>
+          </div>
+          <span class="mix-time" id="mixdur-1">0:40</span>
+        </div>
+        <div class="mix-loading" id="mixload-1"></div>
+        <audio id="mixaudio-1" preload="none"
+          src="https://drive.google.com/uc?export=download&id=1bXJYmkkx3GHlU6bZc-iGPN4sBsjB08RL"
+          data-start="117" data-end="157">
+        </audio>
+      </div>
+
+      <div class="mix-card" id="mixcard-2">
+        <div class="mix-card-header">
+          <div class="mix-num">3</div>
+          <div class="mix-info">
+            <div class="mix-title">Get Busy × Gasolina</div>
+            <div class="mix-tag">Transition live · Extrait</div>
+          </div>
+          <div class="mix-eq">
+            <div class="mix-eq-bar" style="--d:.6s;--dl:0s;--h:14px"></div>
+            <div class="mix-eq-bar" style="--d:.8s;--dl:.1s;--h:18px"></div>
+            <div class="mix-eq-bar" style="--d:.5s;--dl:.2s;--h:10px"></div>
+            <div class="mix-eq-bar" style="--d:.7s;--dl:.05s;--h:16px"></div>
+          </div>
+          <button class="mix-play-btn" id="mixbtn-2" onclick="mixToggle(2)">▶</button>
+        </div>
+        <div class="mix-player-wrap">
+          <span class="mix-time" id="mixtime-2">0:00</span>
+          <div class="mix-progress-wrap" onclick="mixSeek(2, event)">
+            <div class="mix-progress-bar" id="mixbar-2"></div>
+          </div>
+          <span class="mix-time" id="mixdur-2">0:40</span>
+        </div>
+        <div class="mix-loading" id="mixload-2"></div>
+        <audio id="mixaudio-2" preload="none"
+          src="https://drive.google.com/uc?export=download&id=1a1ON7XBfRvBfN7Dk60W9F5JHvk_zBSV1"
+          data-start="75" data-end="115">
+        </audio>
+      </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:52px; padding:32px; background:var(--card); border:1px dashed var(--border); border-radius:20px;">
+      <div style="font-size:2rem; margin-bottom:12px;">🎧</div>
+      <p style="color:var(--muted); margin-bottom:20px; font-size:.95rem;">Tu veux ton ambiance sur-mesure ? Contacte-moi et dis-moi ce que tu aimes !</p>
+      <a href="#" class="btn btn-primary" onclick="showPage('contact')">Discuter de ta soirée</a>
+    </div>
+
+  </div>
+</div>
+
 <!-- ═══════════════════════════════ PAGE CONTACT ═══════════════════════════════ -->
 <div class="page" id="page-contact">
   <div class="page-inner">
@@ -1204,125 +1368,107 @@
     v.closest('.gallery-item').addEventListener('mouseleave',()=>{ v.pause(); v.currentTime=0; });
   });
 
-  // ── PLAYER AUDIO ──
-  const tracks=[
-    { title:'Elle danse sexy × Hay Lupita', file:'https://drive.google.com/uc?export=download&id=1vzVawWVpzcJSxU1WTlDN_HUVd8PdMZ9m', start:77, end:117 },
-    { title:'Party Rock Anthem × Freed From Desire', file:'https://drive.google.com/uc?export=download&id=1bXJYmkkx3GHlU6bZc-iGPN4sBsjB08RL', start:117, end:157 },
-    { title:'Get Busy × Gasolina', file:'https://drive.google.com/uc?export=download&id=1a1ON7XBfRvBfN7Dk60W9F5JHvk_zBSV1', start:75, end:115 },
-  ];
-  let playerTrack=0;
-  let playerAudio=null;
-  let playerPlaying=false;
-  let playerEndTimer=null;
+  // ── PLAYER MES MIX ──
+  function fmtTime(s){ const m=Math.floor(s/60); const sec=Math.floor(s%60); return m+':'+(sec<10?'0':'')+sec; }
 
-  // Créer le player HTML
-  const playerHTML=`
-  <div id="mini-player" style="
-    position:fixed; bottom:0; left:0; right:0; z-index:200;
-    background:rgba(13,13,26,0.97); backdrop-filter:blur(20px);
-    border-top:1px solid rgba(168,85,247,.25);
-    display:flex; align-items:center; gap:16px;
-    padding:12px 24px; box-shadow:0 -10px 40px rgba(168,85,247,.15);
-  ">
-    <!-- Icône DJ -->
-    <span style="font-size:1.4rem; flex-shrink:0;">🎧</span>
+  let mixCurrentIdx = null;
+  let mixRafId = null;
 
-    <!-- Infos piste -->
-    <div style="flex:1; min-width:0;">
-      <div id="player-title" style="font-size:.82rem; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${tracks[0].title}</div>
-      <div style="font-size:.72rem; color:var(--accent); letter-spacing:.5px; margin-top:2px;">EXTRAIT · TRANSITION</div>
-    </div>
-
-    <!-- Barre de progression -->
-    <div style="flex:2; display:flex; align-items:center; gap:10px; min-width:0;">
-      <span id="player-time" style="font-size:.75rem; color:var(--muted); flex-shrink:0;">0:00</span>
-      <div id="player-bar-wrap" onclick="playerSeek(event)" style="flex:1; height:4px; background:var(--border); border-radius:2px; cursor:pointer; position:relative;">
-        <div id="player-bar" style="height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width .2s; pointer-events:none;"></div>
-      </div>
-      <span id="player-dur" style="font-size:.75rem; color:var(--muted); flex-shrink:0;">0:40</span>
-    </div>
-
-    <!-- Contrôles -->
-    <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
-      <button onclick="playerPrev()" title="Précédent" style="background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px;transition:color .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">⏮</button>
-      <button id="player-playbtn" onclick="playerToggle()" style="
-        width:40px; height:40px; border-radius:50%; border:none; cursor:pointer;
-        background:linear-gradient(135deg,var(--accent),var(--accent2));
-        color:#fff; font-size:1rem; display:flex; align-items:center; justify-content:center;
-        box-shadow:0 0 16px var(--accent-glow); transition:opacity .2s;
-      ">▶</button>
-      <button onclick="playerNext()" title="Suivant" style="background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px;transition:color .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">⏭</button>
-    </div>
-
-    <!-- Pistes -->
-    <div style="display:flex; gap:6px; flex-shrink:0;">
-      ${tracks.map((t,i)=>`<button onclick="playerLoad(${i},true)" id="ptrack-${i}" style="
-        width:28px; height:28px; border-radius:50%; border:1px solid var(--border);
-        background:${i===0?'linear-gradient(135deg,var(--accent),var(--accent2))':'var(--card)'};
-        color:#fff; font-size:.72rem; cursor:pointer; font-weight:600; transition:all .2s;
-      ">${i+1}</button>`).join('')}
-    </div>
-  </div>`;
-
-  document.body.insertAdjacentHTML('beforeend', playerHTML);
-  // Ajuster le padding du body pour ne pas cacher le contenu
-  document.body.style.paddingBottom='70px';
-
-  function playerLoad(idx, autoplay=false){
-    playerTrack=idx;
-    if(playerAudio){ playerAudio.pause(); clearTimeout(playerEndTimer); }
-    playerAudio=new Audio(tracks[idx].file);
-    playerAudio.currentTime=tracks[idx].start;
-    document.getElementById('player-title').textContent=tracks[idx].title;
-    // Mettre à jour les boutons de piste
-    tracks.forEach((_,i)=>{
-      const b=document.getElementById('ptrack-'+i);
-      b.style.background=i===idx?'linear-gradient(135deg,var(--accent),var(--accent2))':'var(--card)';
-    });
-    playerAudio.addEventListener('timeupdate', playerUpdate);
-    if(autoplay){ playerAudio.play(); playerPlaying=true; document.getElementById('player-playbtn').textContent='⏸'; }
-    else { playerPlaying=false; document.getElementById('player-playbtn').textContent='▶'; }
+  function mixStop(idx){
+    const audio = document.getElementById('mixaudio-'+idx);
+    const btn = document.getElementById('mixbtn-'+idx);
+    const card = document.getElementById('mixcard-'+idx);
+    if(!audio) return;
+    audio.pause();
+    if(btn) btn.textContent = '▶';
+    if(card) card.classList.remove('playing');
+    cancelAnimationFrame(mixRafId);
+    mixCurrentIdx = null;
   }
 
-  function playerUpdate(){
-    if(!playerAudio) return;
-    const elapsed=playerAudio.currentTime - tracks[playerTrack].start;
-    const total=tracks[playerTrack].end - tracks[playerTrack].start;
-    const pct=Math.max(0,Math.min(100,(elapsed/total)*100));
-    document.getElementById('player-bar').style.width=pct+'%';
-    document.getElementById('player-time').textContent=fmtTime(Math.max(0,elapsed));
-    document.getElementById('player-dur').textContent=fmtTime(total);
-    // Auto next à la fin
-    if(playerAudio.currentTime >= tracks[playerTrack].end){
-      playerNext();
+  function mixToggle(idx){
+    const audio = document.getElementById('mixaudio-'+idx);
+    const btn = document.getElementById('mixbtn-'+idx);
+    const card = document.getElementById('mixcard-'+idx);
+    const load = document.getElementById('mixload-'+idx);
+    if(!audio) return;
+
+    // Stop other track if playing
+    if(mixCurrentIdx !== null && mixCurrentIdx !== idx) mixStop(mixCurrentIdx);
+
+    if(!audio.paused){
+      mixStop(idx);
+      return;
+    }
+
+    // Setup audio start time
+    const startSec = parseFloat(audio.dataset.start || 0);
+    const endSec   = parseFloat(audio.dataset.end   || startSec + 40);
+
+    if(load) load.textContent = '⏳ Chargement…';
+
+    // Set src and seek
+    audio.currentTime = startSec;
+
+    const doPlay = () => {
+      audio.currentTime = startSec;
+      const playPromise = audio.play();
+      if(playPromise !== undefined){
+        playPromise.then(()=>{
+          if(load) load.textContent = '';
+          if(btn) btn.textContent = '⏸';
+          if(card) card.classList.add('playing');
+          mixCurrentIdx = idx;
+          mixRafLoop(idx, startSec, endSec);
+        }).catch(err=>{
+          if(load) load.textContent = '⚠️ Lecture impossible — vérifie le partage du fichier Google Drive (accès public requis).';
+          console.error('Audio play error:', err);
+        });
+      }
+    };
+
+    if(audio.readyState >= 2){
+      doPlay();
+    } else {
+      audio.load();
+      audio.addEventListener('canplay', doPlay, {once:true});
+      audio.addEventListener('error', ()=>{
+        if(load) load.textContent = '⚠️ Fichier inaccessible — assure-toi que le partage Google Drive est "Tout le monde avec le lien".';
+      }, {once:true});
     }
   }
 
-  function playerToggle(){
-    if(!playerAudio) playerLoad(playerTrack, true);
-    else if(playerPlaying){ playerAudio.pause(); playerPlaying=false; document.getElementById('player-playbtn').textContent='▶'; }
-    else { playerAudio.play(); playerPlaying=true; document.getElementById('player-playbtn').textContent='⏸'; }
+  function mixRafLoop(idx, startSec, endSec){
+    const audio = document.getElementById('mixaudio-'+idx);
+    const bar   = document.getElementById('mixbar-'+idx);
+    const timeEl= document.getElementById('mixtime-'+idx);
+    const durEl = document.getElementById('mixdur-'+idx);
+    if(!audio) return;
+
+    function tick(){
+      if(audio.paused) return;
+      const cur = audio.currentTime;
+      if(cur >= endSec){ mixStop(idx); return; }
+      const elapsed = cur - startSec;
+      const total   = endSec - startSec;
+      const pct     = Math.max(0, Math.min(100, (elapsed/total)*100));
+      if(bar) bar.style.width = pct+'%';
+      if(timeEl) timeEl.textContent = fmtTime(Math.max(0,elapsed));
+      if(durEl)  durEl.textContent  = fmtTime(total);
+      mixRafId = requestAnimationFrame(tick);
+    }
+    mixRafId = requestAnimationFrame(tick);
   }
 
-  function playerNext(){
-    playerLoad((playerTrack+1)%tracks.length, playerPlaying);
+  function mixSeek(idx, e){
+    const audio = document.getElementById('mixaudio-'+idx);
+    if(!audio || audio.paused) return;
+    const startSec = parseFloat(audio.dataset.start || 0);
+    const endSec   = parseFloat(audio.dataset.end   || startSec + 40);
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct  = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = startSec + pct*(endSec - startSec);
   }
-  function playerPrev(){
-    playerLoad((playerTrack-1+tracks.length)%tracks.length, playerPlaying);
-  }
-
-  function playerSeek(e){
-    if(!playerAudio) return;
-    const rect=e.currentTarget.getBoundingClientRect();
-    const pct=(e.clientX-rect.left)/rect.width;
-    const total=tracks[playerTrack].end-tracks[playerTrack].start;
-    playerAudio.currentTime=tracks[playerTrack].start+(pct*total);
-  }
-
-  function fmtTime(s){ const m=Math.floor(s/60); const sec=Math.floor(s%60); return m+':'+(sec<10?'0':'')+sec; }
-
-  // Charger la première piste au démarrage (sans autoplay)
-  playerLoad(0, false);
 
 </script>
 </body>
