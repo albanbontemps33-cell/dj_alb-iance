@@ -1433,7 +1433,7 @@
       audio.load();
       audio.addEventListener('canplay', doPlay, {once:true});
       audio.addEventListener('error', ()=>{
-        if(load) load.textContent = '⚠️ Fichier inaccessible — assure-toi que le partage Google Drive est "Tout le monde avec le lien".';
+        if(load) load.textContent = '⚠️ Fichier inaccessible — Nous rencontrons actuellement des problèmes avec les fichiers audio';
       }, {once:true});
     }
   }
