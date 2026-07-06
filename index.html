@@ -265,16 +265,23 @@
     font-size: .72rem; letter-spacing: 3px; color: var(--muted);
     text-transform: uppercase;
   }
-  .reviews-scroll {
-    display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x proximity;
-    padding: 6px 4px 22px; margin: 0 -4px;
-    scrollbar-width: thin; scrollbar-color: var(--accent) transparent;
+  .reviews-viewport {
+    overflow: hidden; padding: 6px 0 22px; margin: 0 -4px;
+    -webkit-mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent);
+    mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent);
   }
-  .reviews-scroll::-webkit-scrollbar { height: 6px; }
-  .reviews-scroll::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  .reviews-track {
+    display: flex; gap: 20px; width: max-content;
+    animation: reviews-marquee 45s linear infinite;
+  }
+  .reviews-track:hover { animation-play-state: paused; }
+  @keyframes reviews-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
   .review-card {
     background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px;
-    flex: 0 0 auto; width: 280px; scroll-snap-align: start;
+    flex: 0 0 auto; width: 280px;
   }
   .stars { color: #fbbf24; font-size: 1.1rem; margin-bottom: 12px; }
   .review-card blockquote { font-size: .9rem; color: var(--muted); font-style: italic; line-height: 1.7; margin-bottom: 16px; }
@@ -656,28 +663,57 @@
     <h2 class="section-title">Avis clients</h2>
     <div class="divider"></div>
     <div class="reviews-avg">
-      <div class="reviews-avg-score">4,75 étoiles /5 en moyenne</div>
+      <div class="reviews-avg-score">4,8 étoiles /5 en moyenne</div>
       <div class="reviews-avg-sub">Retours de nos clients</div>
     </div>
-    <div class="reviews-scroll">
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <blockquote>"Je recommande à 100 % ! Alban est super professionnel, très disponible et à l'écoute. C'est un vrai passionné de musique. Il nous a fait danser toute la nuit, nous a proposé des jeux et animations. Il est très bien équipé. À très vite pour la prochaine !!"</blockquote>
-        <a href="https://maps.app.goo.gl/gt64DA9HnKbckQYC6" target="_blank" class="review-link">Voir sur Google Maps →</a>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <blockquote>"Un jeune DJ au top ! Très bon choix de musique, il a mis l'ambiance et a su s'adapter. C'était une super soirée aussi bien pour les enfants que pour les plus âgés. Je le recommande !"</blockquote>
-        <a href="https://maps.app.goo.gl/U5jnCz9VcXVhtiaK7" target="_blank" class="review-link">Voir sur Google Maps →</a>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <blockquote>"Super DJ, très bonne accroche dès le premier rendez-vous. On a passé une magnifique soirée grâce à lui, tout le monde s'est éclaté et que de bonne musique !!"</blockquote>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★☆</div>
-        <blockquote>Avis 4 étoiles laissé sur Google.</blockquote>
-        <a href="https://maps.app.goo.gl/vgZAuopTbHzHtqEd9" target="_blank" class="review-link">Voir sur Google Maps →</a>
+    <div class="reviews-viewport">
+      <div class="reviews-track">
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Je recommande à 100 % ! Alban est super professionnel, très disponible et à l'écoute. C'est un vrai passionné de musique. Il nous a fait danser toute la nuit, nous a proposé des jeux et animations. Il est très bien équipé. À très vite pour la prochaine !!"</blockquote>
+          <a href="https://maps.app.goo.gl/gt64DA9HnKbckQYC6" target="_blank" class="review-link">Voir sur Google Maps →</a>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Un jeune DJ au top ! Très bon choix de musique, il a mis l'ambiance et a su s'adapter. C'était une super soirée aussi bien pour les enfants que pour les plus âgés. Je le recommande !"</blockquote>
+          <a href="https://maps.app.goo.gl/U5jnCz9VcXVhtiaK7" target="_blank" class="review-link">Voir sur Google Maps →</a>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Super DJ, très bonne accroche dès le premier rendez-vous. On a passé une magnifique soirée grâce à lui, tout le monde s'est éclaté et que de bonne musique !!"</blockquote>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Excellent DJ, nous avons pris Alban pour notre mariage, il aurait été difficile de trouver mieux, formidable !"</blockquote>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★☆</div>
+          <blockquote>Avis 4 étoiles laissé sur Google.</blockquote>
+          <a href="https://maps.app.goo.gl/vgZAuopTbHzHtqEd9" target="_blank" class="review-link">Voir sur Google Maps →</a>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Je recommande à 100 % ! Alban est super professionnel, très disponible et à l'écoute. C'est un vrai passionné de musique. Il nous a fait danser toute la nuit, nous a proposé des jeux et animations. Il est très bien équipé. À très vite pour la prochaine !!"</blockquote>
+          <a href="https://maps.app.goo.gl/gt64DA9HnKbckQYC6" target="_blank" class="review-link">Voir sur Google Maps →</a>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Un jeune DJ au top ! Très bon choix de musique, il a mis l'ambiance et a su s'adapter. C'était une super soirée aussi bien pour les enfants que pour les plus âgés. Je le recommande !"</blockquote>
+          <a href="https://maps.app.goo.gl/U5jnCz9VcXVhtiaK7" target="_blank" class="review-link">Voir sur Google Maps →</a>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Super DJ, très bonne accroche dès le premier rendez-vous. On a passé une magnifique soirée grâce à lui, tout le monde s'est éclaté et que de bonne musique !!"</blockquote>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Excellent DJ, nous avons pris Alban pour notre mariage, il aurait été difficile de trouver mieux, formidable !"</blockquote>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="stars">★★★★☆</div>
+          <blockquote>Avis 4 étoiles laissé sur Google.</blockquote>
+          <a href="https://maps.app.goo.gl/vgZAuopTbHzHtqEd9" target="_blank" class="review-link">Voir sur Google Maps →</a>
+        </div>
       </div>
     </div>
     <div class="add-review">
