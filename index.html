@@ -253,9 +253,28 @@
   .sim-result p { color: var(--muted); font-size: .85rem; margin-top: 6px; }
 
   /* ── AVIS ── */
-  .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .reviews-avg { text-align: center; margin-bottom: 36px; }
+  .reviews-avg-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  .reviews-avg-sub {
+    font-size: .72rem; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase;
+  }
+  .reviews-scroll {
+    display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x proximity;
+    padding: 6px 4px 22px; margin: 0 -4px;
+    scrollbar-width: thin; scrollbar-color: var(--accent) transparent;
+  }
+  .reviews-scroll::-webkit-scrollbar { height: 6px; }
+  .reviews-scroll::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
   .review-card {
     background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px;
+    flex: 0 0 auto; width: 280px; scroll-snap-align: start;
   }
   .stars { color: #fbbf24; font-size: 1.1rem; margin-bottom: 12px; }
   .review-card blockquote { font-size: .9rem; color: var(--muted); font-style: italic; line-height: 1.7; margin-bottom: 16px; }
@@ -636,7 +655,11 @@
     <p class="section-label">Entreprise</p>
     <h2 class="section-title">Avis clients</h2>
     <div class="divider"></div>
-    <div class="reviews-grid">
+    <div class="reviews-avg">
+      <div class="reviews-avg-score">4,75 étoiles /5 en moyenne</div>
+      <div class="reviews-avg-sub">Retours de nos clients</div>
+    </div>
+    <div class="reviews-scroll">
       <div class="review-card">
         <div class="stars">★★★★★</div>
         <blockquote>"Je recommande à 100 % ! Alban est super professionnel, très disponible et à l'écoute. C'est un vrai passionné de musique. Il nous a fait danser toute la nuit, nous a proposé des jeux et animations. Il est très bien équipé. À très vite pour la prochaine !!"</blockquote>
@@ -646,6 +669,10 @@
         <div class="stars">★★★★★</div>
         <blockquote>"Un jeune DJ au top ! Très bon choix de musique, il a mis l'ambiance et a su s'adapter. C'était une super soirée aussi bien pour les enfants que pour les plus âgés. Je le recommande !"</blockquote>
         <a href="https://maps.app.goo.gl/U5jnCz9VcXVhtiaK7" target="_blank" class="review-link">Voir sur Google Maps →</a>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Super DJ, très bonne accroche dès le premier rendez-vous. On a passé une magnifique soirée grâce à lui, tout le monde s'est éclaté et que de bonne musique !!"</blockquote>
       </div>
       <div class="review-card">
         <div class="stars">★★★★☆</div>
@@ -1184,13 +1211,34 @@
     bgBars.appendChild(s);
   }
 
-  // ── Navigation ──
-  function showPage(id){
+  // ── Navigation (avec historique de navigateur) ──
+  const VALID_PAGES = ['home','outils','avis','mesmix','tarifs','contact'];
+
+  function showPage(id, push = true){
+    if(!VALID_PAGES.includes(id)) id = 'home';
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById('page-'+id).classList.add('active');
     document.getElementById('navLinks').classList.remove('open');
     window.scrollTo({top:0, behavior:'smooth'});
+    if(push){
+      history.pushState({page:id}, '', '#'+id);
+    }
   }
+
+  // Retour/avance navigateur → change de page au lieu de quitter le site
+  window.addEventListener('popstate', (e)=>{
+    const id = (e.state && e.state.page) || 'home';
+    showPage(id, false);
+  });
+
+  // Au chargement : ouvre la page indiquée par l'URL (#avis, #contact, …) si présente
+  (function initRouting(){
+    const initial = (location.hash || '#home').replace('#','');
+    const id = VALID_PAGES.includes(initial) ? initial : 'home';
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+id).classList.add('active');
+    history.replaceState({page:id}, '', '#'+id);
+  })();
 
   document.getElementById('burger').addEventListener('click',()=>{
     document.getElementById('navLinks').classList.toggle('open');
