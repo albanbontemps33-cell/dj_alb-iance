@@ -1290,19 +1290,17 @@
   document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
   // ── Simulateur complet ──
-  const SIM_BASE = 150;
-  const SIM_KM_FREE = 10;
-  const SIM_KM_PRICE = 0.5;
-  const SIM_EVENT = { privee:10, anniversaire:20, mariage:25, entreprise:10 };
+  // Base fixe par type de soirée (couvre la prestation "type", hors heures/install/démontage/km)
+  const SIM_EVENT_BASE = { privee:150, anniversaire:200, mariage:250, entreprise:200 }; // entreprise alignée sur anniversaire, à ajuster si besoin
+  const SIM_HOUR_RATE = 25;   // € par heure de prestation (toutes les heures sont facturées, pas d'heures "offertes")
+  const SIM_INSTALL = 50;     // forfait installation (~1h20)
+  const SIM_DEMONTAGE = 50;   // forfait démontage (~1h)
+  const SIM_KM_FREE = 5;      // km offerts avant facturation
+  const SIM_KM_PRICE = 0.5;   // € par km au-delà des km offerts
 
-  function simGuestCost(g){ return g<=25 ? 0 : Math.ceil((g-25)/5)*3; }
   function simHourToNum(t){ return parseInt(t.split(':')[0]); }
   function simDuration(s,e){ let sh=simHourToNum(s),eh=simHourToNum(e); if(eh<sh) eh+=24; return eh-sh; }
-  function simHourCost(s,e){
-    let cost=Math.max(0,simDuration(s,e)-4)*20;
-    if(e==='04:00') cost+=50; else if(e>='02:00') cost+=30;
-    return cost;
-  }
+  function simHourCost(s,e){ return simDuration(s,e)*SIM_HOUR_RATE; }
   async function simGetDistance(city){
     try{
       const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city+', France')}`,{headers:{'User-Agent':'DJ Alb-iance Simulator'}});
@@ -1335,13 +1333,13 @@
     const distance=await simGetDistance(city);
     if(distance===null){ showSimError('❌ Ville introuvable. Essayez un nom plus précis.'); return; }
 
-    let price=SIM_BASE+SIM_EVENT[evtKey]+simGuestCost(guests)+simHourCost(start,end);
+    let price=SIM_EVENT_BASE[evtKey]+simHourCost(start,end)+SIM_INSTALL+SIM_DEMONTAGE;
     if(distance>SIM_KM_FREE) price+=(distance-SIM_KM_FREE)*SIM_KM_PRICE;
     price=Math.round(price);
 
     pDisplay.textContent=price+' €';
     pDisplay.style.cssText='font-family:Bebas Neue,sans-serif;font-size:3.5rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;';
-    rNote.textContent=`Estimation indicative (≈ ${distance} km) · Contactez-nous pour un devis personnalisé`;
+    rNote.textContent=`Estimation indicative (≈ ${distance} km) · Installation & démontage inclus · Contactez-nous pour un devis personnalisé`;
 
     devisSection.style.display='block';
     document.getElementById('q-ville').value=city;
