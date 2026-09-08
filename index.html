@@ -1295,6 +1295,7 @@
   const SIM_HOUR_RATE = 25;   // € par heure de prestation (toutes les heures sont facturées, pas d'heures "offertes")
   const SIM_INSTALL = 50;     // forfait installation (~1h20)
   const SIM_DEMONTAGE = 50;   // forfait démontage (~1h)
+  const SIM_MATOS = 30;       // matériel complémentaire (éléments oubliés)
   const SIM_KM_FREE = 5;      // km offerts avant facturation
   const SIM_KM_PRICE = 0.5;   // € par km au-delà des km offerts
 
@@ -1333,7 +1334,7 @@
     const distance=await simGetDistance(city);
     if(distance===null){ showSimError('❌ Ville introuvable. Essayez un nom plus précis.'); return; }
 
-    let price=SIM_EVENT_BASE[evtKey]+simHourCost(start,end)+SIM_INSTALL+SIM_DEMONTAGE;
+    let price=SIM_EVENT_BASE[evtKey]+simHourCost(start,end)+SIM_INSTALL+SIM_DEMONTAGE+SIM_MATOS;
     if(distance>SIM_KM_FREE) price+=(distance-SIM_KM_FREE)*SIM_KM_PRICE;
     price=Math.round(price);
 
