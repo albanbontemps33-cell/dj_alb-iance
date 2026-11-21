@@ -342,7 +342,8 @@
     nav { padding: 16px 20px; }
     .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--deep); border-bottom: 1px solid var(--border); padding: 16px 0; gap: 0; }
     .nav-links.open { display: flex; }
-    .nav-links a { padding: 12px 24px; border-radius: 0; }
+    .nav-links a { padding: 16px 24px; border-radius: 0; font-size: 1.15rem; }
+    .nav-links .nav-cta { margin: 8px 24px 4px; text-align: center; font-size: 1.1rem; }
     .sub { position: static; background: rgba(0,0,0,.3); box-shadow: none; border-radius: 0; margin: 0; }
     .burger { display: block; }
     section, .page-inner { padding: 80px 20px; }
@@ -406,11 +407,11 @@
   <section style="padding-top:60px; padding-bottom:60px;">
     <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:20px; text-align:center;">
       <div class="card reveal" style="padding:32px 20px;">
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:3rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" class="counter" data-target="40">0</div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:3rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" class="counter" data-target="40" data-prefix="+">+0</div>
         <div style="color:var(--muted); font-size:.85rem; margin-top:6px; letter-spacing:.5px;">SOIRÉES ANIMÉES</div>
       </div>
       <div class="card reveal" style="padding:32px 20px;">
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:3rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">4,8 ⭐</div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:3rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">4,8 ★★★★★</div>
         <div style="color:var(--muted); font-size:.85rem; margin-top:6px; letter-spacing:.5px;">NOTE GOOGLE</div>
       </div>
       <div class="card reveal" style="padding:32px 20px;">
@@ -646,6 +647,11 @@
         <span class="tool-icon"></span>
         <h3>Lyres motorisées</h3>
         <p>Faisceaux lumineux mobiles pour des effets scéniques dynamiques et spectaculaires.</p>
+      </a>
+      <a href="https://terredeson.com/effets-animation/37267-spider-led-96w-rgbw-mk2-3662279510214.html" target="_blank" class="tool-card">
+        <span class="tool-icon"></span>
+        <h3>Spider LED</h3>
+        <p>Power Lighting Spider LED 96W RGBW MK2 — 8 LEDs CREE 12 W, faisceaux colorés qui balayent la salle, 25 effets intégrés, mode musical et stroboscope.</p>
       </a>
       <div class="tool-card" style="background: linear-gradient(135deg, rgba(168,85,247,.12), rgba(236,72,153,.08)); border-color: rgba(168,85,247,.3); cursor:default;">
         <span class="tool-icon">🎤</span>
@@ -1577,7 +1583,7 @@
       const step=Math.ceil(target/40);
       const timer=setInterval(()=>{
         current=Math.min(current+step, target);
-        el.textContent=current+(el.dataset.suffix||'');
+        el.textContent=(el.dataset.prefix||'')+current+(el.dataset.suffix||'');
         if(current>=target) clearInterval(timer);
       },30);
     });
